@@ -9,6 +9,35 @@ class ReportParser
         return isset($_GET['startTime']) && isset($_GET['endTime']);
     }
 
+    public static function getPageLink($page, $params){
+
+        switch($page){
+            case 'first' :
+                if(!self::isOnFirstPage($params)){
+                    unset($params['pageStartTime']);
+                    return HttpQueryManager::getEncounterHttpQuery($params);
+                }
+            break;
+            case 'next'  : 
+                if(!self::isOnLastPage($params)){
+                    $nextPageParams = array_merge($params, ['pageStartTime' => $params['nextPageTimestamp']]);
+                    unset($nextPageParams['nextPageTimestamp']);
+                    return HttpQueryManager::getEncounterHttpQuery($nextPageParams);
+                }
+            break;
+        }
+
+        return null;
+    }
+
+    public static function isOnFirstPage($params){
+        return !isset($params['pageStartTime']);
+    }
+
+    public static function isOnLastPage($params){
+        return !isset($params['nextPageTimestamp']) || $params['endTime'] == $params['nextPageTimestamp'];
+    }
+
     public static function getParticipantListFromEncounters($encounters){
         $participants = array_merge(
             $encounters['friendlies'],
@@ -28,9 +57,5 @@ class ReportParser
         }
 
         return 'N/A';
-    }
-
-    public static function getNextPageLink($nextPageTimestamp){
-        echo $nextPageTimestamp;exit;
     }
 }
