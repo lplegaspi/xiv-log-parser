@@ -1,5 +1,5 @@
 <?php
-if (is_array($encounters) && count($encounters)) {
+if($reportParser->hasEncounters()){
     echo '<table border=1 cellpadding=5 style="border-collapse:collapse;">';
         echo '<tr>';
             echo '<th>ID</th>';
@@ -7,9 +7,9 @@ if (is_array($encounters) && count($encounters)) {
             echo '<th>DURATION</th>';
             echo '<th>LINKS</th>';
         echo '</tr>';
-        foreach($encounters['fights'] as $key => $encounter) {
+        foreach($reportParser->getEncounters() as $key => $encounter) {
             $duration        = StringFormatter::getDurationFromStartAndEndTime($encounter['start_time'], $encounter['end_time']);
-            $httpQuery       = StringFormatter::getEncounterHttpQueryByParams($reportId, $encounter['start_time'], $encounter['end_time']);
+            $httpQuery       = HttpQueryManager::getEncounterHttpQuery(['reportId' => $params['reportId'], 'fightId' => $encounter['id']]);
             $classKillStatus = isset($encounter['kill']) && $encounter['kill'] ? 'cleared' : null;
 
             echo '<tr class="'.$classKillStatus.'">';
@@ -23,8 +23,12 @@ if (is_array($encounters) && count($encounters)) {
         }
     echo '</table>';
 } else {
-    echo 'The report ID you have provided doesn\'t seem to contain any valid encounters.';
-    echo '<br/>Check another report?';
-
+    echo '<div class="m5 fc-error fwb">';
+        if($reportParser->hasError()){
+            echo $reportParser->getErrorMessage();
+        }else{
+            echo $formValidator->getErrorMessage();
+        }
+    echo '</div>';
     require_once('views/_reportIdForm.php');
 }

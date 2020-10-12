@@ -1,0 +1,38 @@
+body, table 
+{
+    font-family:tahoma;
+    font-size:12px;
+    cursor:default;
+}
+
+table
+{
+    border-collapse:collapse;
+}
+
+table.encounterEvents tbody tr:hover
+{
+    background-color:#d2e1f1;
+    border:2px solid black;
+}
+table.encounterEvents tbody tr
+{
+    text-align:center;
+}
+table.encounterEvents tbody td.no-data
+{
+    background-color:#ddd;
+}
+
+a {text-decoration:none;color:#5f8bdc;}
+
+.fwb            { font-weight:bold; }
+.fc-error       { color:#d55; }
+.m5             { margin:5px; }
+.w100p          { width:100%; }
+.fr             { float:right; }
+.fl             { float:left; }
+.cb             { clear:both; }
+.lh28           { line-height:28px; }
+.inline-block   { display:inline-block; }
+.cleared        { background-color:#cec; }

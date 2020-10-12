@@ -3,8 +3,8 @@ class ReportRepository
 {
     public static function findReportById($id)
     {
-        $query = http_build_query(['api_key' => FfLogsApiConstants::KEY_PRIVATE]);
-        $url   = FfLogsApiConstants::URL_BASE . FfLogsApiConstants::URL_REPORT_SEARCH . $id . '?' . $query;
+        $query = '?' . http_build_query(['api_key' => FfLogsApiConstants::KEY]);
+        $url   = FfLogsApiConstants::URL_BASE . FfLogsApiConstants::URL_REPORT_SEARCH . $id . $query ;
 
         return (new CurlManager)->get($url);
     }
@@ -30,13 +30,7 @@ class ReportRepository
 
     public static function findDamageTakenByParams($params)
     {
-        $query = http_build_query([
-            'start'   => isset($params['pageStartTime']) ? $params['pageStartTime'] : $params['startTime'],
-            'end'     => $params['endTime'],
-            'api_key' => FfLogsApiConstants::KEY_PRIVATE
-        ]);
-        $url  = FfLogsApiConstants::URL_BASE . FfLogsApiConstants::URL_ENCOUNTER_DAMAGE_TAKEN . $params['reportId'] . '?' . $query;
-
+        $url = self::buildUrl('damage-taken', $params);
         return (new CurlManager)->get($url);
     }
 
@@ -45,28 +39,51 @@ class ReportRepository
         $hasReachedTimestampLimit = false;
         $currentPageTimestamp     = isset($params['pageStartTime']) ? $params['pageStartTime'] : $params['startTime'];
         $data                     = [];
-        $count = 1;
 
         while($hasReachedTimestampLimit == false){
-            $query = http_build_query([
-                'start'   => $currentPageTimestamp,
-                'end'     => $params['endTime'],
-                'api_key' => FfLogsApiConstants::KEY_PRIVATE
-            ]);
-
-            $url = FfLogsApiConstants::URL_BASE . FfLogsApiConstants::URL_ENCOUNTER_HEALING . $params['reportId'] . '?' . $query;
+            $url = self::buildUrl('healing', $params);
             $res = (new CurlManager)->get($url);
 
             $filtered = array_filter($res['events'], function($value) use($maxPageTimestamp){
                 return $value['timestamp'] < $maxPageTimestamp;
             });
 
-            $currentPageTimestamp     = isset($res['nextPageTimestamp']) ? $res['nextPageTimestamp'] : null;
-            $hasReachedTimestampLimit = count($filtered) < count($res['events']) || is_null($currentPageTimestamp);
-
+            $params['pageStartTime']  = isset($res['nextPageTimestamp']) ? $res['nextPageTimestamp'] : null;
+            $hasReachedTimestampLimit = count($filtered) < count($res['events']) || is_null($params['pageStartTime']);
             $data                     = array_merge($data, $res['events']);
         }
 
         return $data;
+    }
+
+    public static function buildUrl($type, $params)
+    {
+        $urlBase = FfLogsApiConstants::URL_BASE;
+
+        switch($type){
+            case 'damage-taken': 
+                $urlBase        .= FfLogsApiConstants::URL_ENCOUNTER_DAMAGE_TAKEN;
+                $targetParamKey = 'sourceid';
+            break;
+            case 'healing':
+                $urlBase        .= FfLogsApiConstants::URL_ENCOUNTER_HEALING;
+                $targetParamKey = 'targetid';
+            break;
+        }
+
+        $urlBase     .= StringFormatter::getParsedReportId($params['reportId']) . '?';
+
+        $paramsBase = [
+            'start'   => isset($params['pageStartTime']) ? $params['pageStartTime'] : $params['startTime'],
+            'end'     => $params['endTime'],
+            'api_key' => FfLogsApiConstants::KEY
+        ];
+
+        if(isset($params['targetId'])){
+            $paramsBase[$targetParamKey] = $params['targetId'];
+        }
+
+        $query = http_build_query($paramsBase);
+        return $urlBase . $query;
     }
 }

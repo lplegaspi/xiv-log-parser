@@ -1,22 +1,24 @@
 <?php require_once('views/_encounterDetails/_navigation.php'); ?>
-<table class="encounterEvents" border=1 cellpadding=5>
+<table class="encounterEvents w100p" border=1 cellpadding=5>
     <thead>
         <tr>
-            <th width="100">SOURCE</th>
-            <th width="200">ABILITY</th>
-            <th width="100">TARGET</th>
-            <th width="50">DAMAGE</th>
-            <th>TIME</th>
-            <th width="50">HEALED</th>
-            <th width="100">TARGET</th>
-            <th width="200">ABILITY</th>
-            <th width="100">SOURCE</th>
+            <th width="12%">SOURCE</th>
+            <th width="16%">ABILITY</th>
+            <th width="12%">TARGET</th>
+
+            <th width="8%">DAMAGE</th>
+            <th width="4%">TIME</th>
+            <th width="8%">HEALED</th>
+
+            <th width="12%">TARGET</th>
+            <th width="16%">ABILITY</th>
+            <th width="12%">SOURCE</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <?php
-                foreach($encounterEvents['events'] as $key => $event){
+                foreach($events as $key => $event){
                     switch($event['type']){
                         case 'damage':
                             echo '<tr>';
@@ -24,22 +26,24 @@
                                 echo '<td>' . $event["ability"]["name"] . '</td>';
                                 echo '<td>' . $participants[$event["targetID"]]['name'] . '</td>';
                                 echo '<td>' . $event["amount"] . '</td>';
-                                echo '<td>' . StringFormatter::getDurationFromStartAndEndTime($_GET['startTime'], $event['timestamp']) . '</td>';
+                                echo '<td>' . StringFormatter::getDurationFromStartAndEndTime($startEndTime['startTime'], $event['timestamp']) . '</td>';
 
-                                echo '<td class="no-data">-</td>';
-                                echo '<td class="no-data">-</td>';
-                                echo '<td class="no-data">-</td>';
-                                echo '<td class="no-data">-</td>';
+                                echo '<td class="no-data">-</td>'
+                                    . '<td class="no-data">-</td>'
+                                    . '<td class="no-data">-</td>'
+                                    . '<td class="no-data">-</td>'
+                                ;
                             echo '</tr>';
                         break;
                         case 'heal':
                             echo '<tr>';
-                                echo '<td class="no-data">-</td>';
-                                echo '<td class="no-data">-</td>';
-                                echo '<td class="no-data">-</td>';
-                                echo '<td class="no-data">-</td>';
+                                echo '<td class="no-data">-</td>'
+                                    . '<td class="no-data">-</td>'
+                                    . '<td class="no-data">-</td>'
+                                    . '<td class="no-data">-</td>'
+                                ;
 
-                                echo '<td>' . StringFormatter::getDurationFromStartAndEndTime($_GET['startTime'], $event['timestamp']) . '</td>';
+                                echo '<td>' . StringFormatter::getDurationFromStartAndEndTime($startEndTime['startTime'], $event['timestamp']) . '</td>';
                                 echo '<td>' . $event["amount"] . '</td>';
                                 echo '<td>' . $participants[$event["targetID"]]['name'] . '</td>';
                                 echo '<td>' . $event["ability"]["name"] . '</td>';

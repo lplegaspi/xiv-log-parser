@@ -1,8 +1,6 @@
 <?php
 class FfLogsApiConstants {
-    const KEY_PRIVATE                = 'f350cef3ffbe5ec09f91763c4b77dbb8';
-    const KEY_PUBLIC                 = '42cef46916dc948addaea3c59c321518';
-
+    const KEY                        = 'f350cef3ffbe5ec09f91763c4b77dbb8';
     const REPORT_ID_LENGTH           = 16;
     
     const URL_BASE                   = 'https://www.fflogs.com:443/v1';
@@ -12,4 +10,6 @@ class FfLogsApiConstants {
 
     const EVENT_TYPE_DAMAGE_TAKEN    = 'damage-taken';
     const EVENT_TYPE                 = 'healing';
+
+    const REGEX_REPORT_ID            = '/(?!.*fflogs\.com\/reports\/)((?:a:)?[a-zA-Z0-9]{16})\/?(?!#(?=(?:.*fight=([^&]*))?)(?=(?:.*source=([^&]*))?).*)?/';
 }

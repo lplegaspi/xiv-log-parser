@@ -18,7 +18,7 @@ class CurlManager
 
     public function close()
     {
-        if (is_resource($this->curl)) {
+        if(is_resource($this->curl)){
             curl_close($this->curl);
         }
     }
