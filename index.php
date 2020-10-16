@@ -24,7 +24,11 @@
                     $nextPageLink       = $reportParser->getPageLink('next', array_merge($params, $startEndTime));
                     $events             = $reportParser->getEncounterEvents();
 
-                    require_once('views/_encounterDetails.php');
+                    if($reportParser->hasEncounterEntries()){
+                        require_once('views/_encounterDetails.php');
+                    } else {
+                        require_once('views/_noEncounterEntries.php');
+                    }
                 } else {
                     require_once('views/_encounterList.php');
                 }

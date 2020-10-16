@@ -5,7 +5,7 @@ if($reportParser->hasEncounters()){
             echo '<th>ID</th>';
             echo '<th>FIGHT NAME</th>';
             echo '<th>DURATION</th>';
-            echo '<th>LINKS</th>';
+            echo '<th></th>';
         echo '</tr>';
         foreach($reportParser->getEncounters() as $key => $encounter) {
             $duration        = StringFormatter::getDurationFromStartAndEndTime($encounter['start_time'], $encounter['end_time']);
@@ -17,7 +17,7 @@ if($reportParser->hasEncounters()){
                 echo '<td>'.$encounter['name'].'</td>';
                 echo '<td>'.$duration.'</td>';
                 echo '<td>';
-                    echo '<a href="' . $httpQuery . '">Damage Taken</a>';
+                    echo '<a class="fwb" href="' . $httpQuery . '">⋙</a>';
                 echo '</td>';
             echo '</tr>';
         }

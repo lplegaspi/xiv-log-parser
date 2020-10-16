@@ -29,6 +29,11 @@ class ReportParser
         return isset($this->report['fights']) && count($this->report['fights']);
     }
 
+    public function hasEncounterEntries()
+    {
+        return count($this->getEncounterEvents()) > 0;
+    }
+
     public function getReport()
     {
         return $this->report;

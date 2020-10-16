@@ -1,4 +1,11 @@
 <?php require_once('views/_encounterDetails/_navigation.php'); ?>
+<div class="">
+    <div class="fwb inline-block">Filter by : </div>
+    <div class="inline-block">
+        <?php require_once('views/_encounterDetails/_filterByPlayerLinks.php'); ?>
+    </div>
+    <div class="m5"></div>
+</div>
 <table class="encounterEvents w100p" border=1 cellpadding=5>
     <thead>
         <tr>
